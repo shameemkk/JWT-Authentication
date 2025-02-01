@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require('express');
 const cors = require('cors');
 const authRouter = require('./routes/authRouter');
+const actionsRouter = require('./routes/actionsRouter');
 const connectDB = require("./config/db")
 
 
@@ -17,6 +18,7 @@ connectDB()
 
 // Routes
 app.use('/auth', authRouter);
+app.use('/action', actionsRouter);
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);

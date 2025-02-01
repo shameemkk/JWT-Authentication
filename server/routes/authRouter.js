@@ -1,8 +1,9 @@
 const express = require('express');
-const router = express.Router();
+const jwt =require('jsonwebtoken');
 const mongoose = require('mongoose');
+const router = express.Router();
 const User = require('../models/authModel');
-const {verifyPassword, hashPassword} =require("../utils/argon2")
+const {verifyPassword, hashPassword} =require("../utils/argon2");
 
 router.post('/register', async (req, res) => {
   try {
@@ -43,7 +44,16 @@ router.post('/login', async (req, res) => {
     if (!isValidPassword) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
-    return res.status(200).json({ email: email });
+    const payload={
+      user:{
+        id:user._id,
+        userName:user.userName
+      }
+    }
+    const token = jwt.sign(payload, process.env.SECRET_KEY, {
+      expiresIn: "1h",
+    });
+    return res.status(200).json({Username:user.userName, token: token});
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
