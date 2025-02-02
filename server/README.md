@@ -78,8 +78,7 @@ curl -X POST http://localhost:3000/auth/register \
 -d '{
   "userName": "exampleUser",
   "email": "user@example.com",
-  "password": "password123",
-  "confirmPassword": "password123"
+  "password": "password123"
 }'
 ```
 
@@ -94,19 +93,6 @@ curl -X POST http://localhost:3000/auth/login \
 }'
 ```
 
-#### Update User
-
-```bash
-curl -X PUT http://localhost:3000/auth/update \
--H "Content-Type: application/json" \
--d '{
-  "userId": "user_id_here",
-  "userName": "newUserName",
-  "email": "newemail@example.com",
-  "password": "newpassword123",
-  "confirmPassword": "newpassword123"
-}'
-```
 
 #### Get Info (Protected Route)
 
