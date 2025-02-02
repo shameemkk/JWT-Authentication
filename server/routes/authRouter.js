@@ -8,11 +8,9 @@ const {verifyPassword, hashPassword} =require("../utils/argon2");
 router.post('/register', async (req, res) => {
   try {
     
-    const { userName, email, password, confirmPassword } = req.body;
-    if (!userName || !email || !password || !confirmPassword) {
+    const { userName, email, password } = req.body;
+    if (!userName || !email || !password ) {
       return res.status(400).json({ error: "Check the input credentials" });
-    }if (password !== confirmPassword) {
-      return res.status(400).json({ error: "The password does not match" });
     }
     const hashedPassword=await hashPassword(password)
     const user = new User({
