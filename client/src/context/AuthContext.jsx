@@ -1,24 +1,28 @@
 import axios from 'axios';
 import { createContext, useState, useEffect } from 'react';
 import { API_URLS } from '../config/api';
+import Cookies from 'js-cookie';
 
 export const context = createContext();
 
 const AuthContext = ({ children }) => {
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
+    const [user, setUser] = useState(() => {
+        const userCookie = Cookies.get('user');
+        return userCookie ? JSON.parse(userCookie) : null;
+    });
 
     useEffect(() => {
         if (user) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
         }
-    }, []);
+    }, [user]);
 
     const login = async (userData) => {
         try {
             const response = await axios.post(API_URLS.auth.login, userData);
             const user = { ...response.data, tokenTimestamp: new Date().toISOString() };
             setUser(user);
-            localStorage.setItem('user', JSON.stringify(user));
+            Cookies.set('user', JSON.stringify(user));
             axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
             return user;
         } catch (error) {
@@ -37,7 +41,7 @@ const AuthContext = ({ children }) => {
 
     const logout = () => {
         setUser(null);
-        localStorage.removeItem('user');
+        Cookies.remove('user');
         delete axios.defaults.headers.common['Authorization'];
     };
 

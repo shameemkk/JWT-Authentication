@@ -1,8 +1,10 @@
 import { Navigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const ProtectedRoute = ({ children }) => {
-    const user = localStorage.getItem('user');
-    const tokenTimestamp = user ? JSON.parse(user).tokenTimestamp : null;
+    const userCookie = Cookies.get('user');
+    const user = userCookie ? JSON.parse(userCookie) : null;
+    const tokenTimestamp = user ? user.tokenTimestamp : null;
 
     if (!user) {
         return <Navigate to="/login" replace />;
@@ -15,7 +17,7 @@ const ProtectedRoute = ({ children }) => {
         const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
 
         if (currentTime - loginTimeMs > oneHour) {
-            localStorage.clear(); // Clear all localStorage
+            Cookies.remove('user'); // Clear user cookie
             return <Navigate to="/login" replace />;
         }
     }
