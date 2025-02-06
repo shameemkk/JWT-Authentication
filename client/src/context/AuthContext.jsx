@@ -20,9 +20,9 @@ const AuthContext = ({ children }) => {
     const login = async (userData) => {
         try {
             const response = await axios.post(API_URLS.auth.login, userData);
-            const user = { ...response.data, tokenTimestamp: new Date().toISOString() };
+            const user = { ...response.data };
             setUser(user);
-            Cookies.set('user', JSON.stringify(user));
+            Cookies.set('user', JSON.stringify(user), { expires: 1 }); // Cookie expires in 1 day
             axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
             return user;
         } catch (error) {
